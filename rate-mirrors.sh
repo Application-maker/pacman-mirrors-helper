@@ -1,10 +1,12 @@
 #!/bin/bash
+
 repolist=(arch archarm archlinuxcn artix cachyos chaotic-aur endeavouros manjaro rebornos)
 
 NONE='\e[0m'
 LRED='\e[1;31m'
 LGREEN='\e[1;32m'
 LBLUE='\e[1;34m'
+
 if [ "$1" = help ] || [ "$1" = --help ] || [[ -z "$1" ]] || [[ ! "${repolist[*]}" =~ ${1} ]]; then
     printf "%s""$LRED""No $LGREEN$1$LRED repo found! Avaiable options are:""\n""%s""$LBLUE${repolist[*]}$NONE"
     exit
@@ -21,6 +23,7 @@ if [ "$repo" = arch ]; then
     sudo install -m644 "$MIRRORLIST_TEMP" /etc/pacman.d/mirrorlist
 else
     sudo install -m644 "$MIRRORLIST_TEMP" "/etc/pacman.d/$repo-mirrorlist"
+    
     if ! grep -q "\[$repo]" "/etc/pacman.conf"; then
         echo 'Do you want to trust mirrors without signature. This may fix some issues(Y/n) '
         read -r choice
@@ -33,5 +36,7 @@ else
 fi
 
 sudo pacman -Syy
+
 rm "$MIRRORLIST_TEMP"
+
 printf "%s""$LGREEN""Done!""$NONE"
