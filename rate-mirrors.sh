@@ -19,6 +19,7 @@ repo=$1
 if [ "$2" = remove ]; then
     if grep -q "\[$repo]" "/etc/pacman.conf"; then
         sudo sed -i "/$repo/{N;d;}" /etc/pacman.conf
+        sudo rm "/etc/pacman.d/"$repo"-mirrorlist"
         exit
     fi
     printf "%S""$LRED""There is no $repo repo configured!""\n""Look in /etc/pacman.conf to get configured repos"
