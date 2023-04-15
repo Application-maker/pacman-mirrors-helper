@@ -28,7 +28,7 @@ if [ "$2" = remove ]; then
     if grep -q "\[$repo]" "/etc/pacman.conf"; then
         # Remove repo
         sudo sed -i "/$repo/{N;d;}" /etc/pacman.conf
-        sudo rm "/etc/pacman.d/"$repo"-mirrorlist"
+        sudo rm /etc/pacman.d/"$repo"-mirrorlist
         exit
     fi
     # If not configured
