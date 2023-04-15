@@ -21,7 +21,7 @@ if [ "$2" = remove ]; then
         sudo sed -i "/$repo/{N;d;}" /etc/pacman.conf
         exit
     fi
-    echo no
+    printf "%S""$LRED""There is no $repo repo configured!""\n""Look in /etc/pacman.conf to get configured repos"
     exit
 fi
 
