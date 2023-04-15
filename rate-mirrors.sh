@@ -8,13 +8,22 @@ LGREEN='\e[1;32m'
 LBLUE='\e[1;34m'
 
 if [ "$1" = help ] || [ "$1" = --help ] || [[ -z "$1" ]] || [[ ! "${repolist[*]}" =~ ${1} ]]; then
-    printf "%s""$LRED""No $LGREEN$1$LRED repo found! Avaiable options are:""\n""%s""$LBLUE${repolist[*]}$NONE"
+    printf "%s""$LRED""No $LGREEN$1$LRED repo found! Avaiable options are:""\n""%s""$LBLUE{${repolist[*]}} $LRED{remove}$NONE"
     exit
 fi
 
 MIRRORLIST_TEMP="$(mktemp)"
 
 repo=$1
+
+if [ "$2" = remove ]; then
+    if grep -q "\[$repo]" "/etc/pacman.conf"; then
+        sudo sed -i "/$repo/{N;d;}" /etc/pacman.conf
+        exit
+    fi
+    echo no
+    exit
+fi
 
 printf "\n""%s""$LGREEN""Rating mirrors...""$NONE""\n"
 rate-mirrors --allow-root --save="$MIRRORLIST_TEMP" "$repo" > /dev/null
