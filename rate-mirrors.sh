@@ -16,7 +16,8 @@ MIRRORLIST_TEMP="$(mktemp)"
 
 repo=$1
 
-rate-mirrors --allow-root --save="$MIRRORLIST_TEMP" "$repo"
+printf "\n""%s""$LGREEN""Rating mirrors...""$NONE""\n"
+rate-mirrors --allow-root --save="$MIRRORLIST_TEMP" "$repo" > /dev/null
 grep -qe "^Server = http" "$MIRRORLIST_TEMP" 
 
 if [ "$repo" = arch ]; then
@@ -35,7 +36,9 @@ else
     fi
 fi
 
-sudo pacman -Syy
+printf "\n""%s""$LGREEN""Updating mirrors...""$NONE""\n"
+
+sudo pacman -Syyu --noconfirm
 
 rm "$MIRRORLIST_TEMP"
 
