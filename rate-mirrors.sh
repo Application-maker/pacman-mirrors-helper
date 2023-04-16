@@ -32,7 +32,7 @@ if [ "$2" = remove ]; then
         exit
     fi
     # If not configured
-    printf "%S""$LRED""There is no $repo repo configured!""\n""Look in /etc/pacman.conf to get configured repos"
+    printf "%s""$LRED""There is no $repo repo configured!""\n""Look in /etc/pacman.conf to get configured repos"
     exit
 fi
 
