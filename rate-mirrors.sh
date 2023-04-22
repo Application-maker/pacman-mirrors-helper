@@ -13,7 +13,7 @@ LBLUE='\e[1;34m'
 # Help
 if [ "$1" = help ] || [ "$1" = --help ] || [[ -z "$1" ]] || [[ ! "${repolist[*]}" =~ ${1} ]]; then
     printf "%s""$LRED""No $LGREEN$1$LRED repo found! Avaiable options are:""\n""%s""$LBLUE{${repolist[*]}} $LRED{remove}$NONE"
-    exit
+    exit 1
 fi
 
 # Temp file
@@ -33,7 +33,7 @@ if [ "$2" = remove ]; then
     fi
     # If not configured
     printf "%s""$LRED""There is no $repo repo configured!""\n""Check /etc/pacman.conf to get configured repos"
-    exit
+    exit 1
 fi
 
 # Rate mirrors
