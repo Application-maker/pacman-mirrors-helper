@@ -63,7 +63,7 @@ fi
 
 # Update mirrors
 printf "\n""%s""$LGREEN""Updating mirrors...""$NONE""\n"
-sudo pacman -Syyu --noconfirm
+sudo pacman -Syyu
 
 # Remove temp file
 rm "$MIRRORLIST_TEMP"
