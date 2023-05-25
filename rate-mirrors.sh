@@ -20,6 +20,11 @@ fi
 MIRRORLIST_TEMP="$(mktemp)"
 
 # $1, $2, $3... stands for arguments, for example: $1 = first argument $2 = second argument $3 = third argument and so on
+if [ "$1" = arch ] && [ "$2" = remove ] || [  "$1" = archarm ] && [ "$2" = remove ]; then
+    printf "%s""$LRED""Can't delete arch repositories!""\n"
+    exit 1
+fi
+
 repo=$1
 
 # Remove repo
