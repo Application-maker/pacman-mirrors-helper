@@ -40,6 +40,11 @@ fi
 printf "\n""%s""$LGREEN""Rating mirrors...""$NONE""\n"
 rate-mirrors --allow-root --save="$MIRRORLIST_TEMP" "$repo" > /dev/null
 
+# Adapt to Reborn-OS naming (instead of rebornos.db they have Reborn-OS.db)
+if [ "$repo" == rebornos ]; then
+    repo=Reborn-OS
+fi
+
 # Get mirrors from the rate-mirrors temp file
 grep -qe "^Server = http" "$MIRRORLIST_TEMP" 
 
