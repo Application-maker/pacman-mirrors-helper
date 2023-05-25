@@ -25,8 +25,8 @@ if [ "$1" = arch ] && [ "$2" = remove ] || [  "$1" = archarm ] && [ "$2" = remov
     exit 1
 fi
 
-if [ "$1" = artix ] && [ ! "$2" = remove ]; then
-    printf "%s""$LRED""Artix repositories aren't supported yet!""\n"
+if [ "$1" = artix ] && [ ! "$2" = remove ] || [ "$1" = manjaro ] && [ ! "$2" = remove ]; then
+    printf "%s""$LRED""Artix and Manjaro repositories aren't supported yet!""\n"
     exit 1
 fi
 
