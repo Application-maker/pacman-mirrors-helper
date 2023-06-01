@@ -56,6 +56,7 @@ if [ ! -x "$(command -v rate-mirrors)" ]; then
     else
         sudo pacman -S rate-mirrors
         printf "%s""$LGREEN""Done!""$NONE"
+        printf "\n""%s""$LGREEN""Rating mirrors...""$NONE""\n"
     fi
 fi
 rate-mirrors --allow-root --save="$MIRRORLIST_TEMP" "$repo" > /dev/null
