@@ -48,6 +48,16 @@ fi
 
 # Rate mirrors
 printf "\n""%s""$LGREEN""Rating mirrors...""$NONE""\n"
+if [ ! -x "$(command -v rate-mirrors)" ]; then
+    printf "%s""$LRED""rate-mirrors is not installed!""$NONE"
+    read -p "Do you want to install it? (Y/n) " choice
+    if [ "$choice" = n ]; then
+        exit 1
+    else
+        sudo pacman -S rate-mirrors
+        printf "%s""$LGREEN""Done!""$NONE"
+    fi
+fi
 rate-mirrors --allow-root --save="$MIRRORLIST_TEMP" "$repo" > /dev/null
 
 # Adapt to Reborn-OS naming (instead of rebornos.db they have Reborn-OS.db)
