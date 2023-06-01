@@ -77,8 +77,7 @@ else
     # Check if repo is configured and add if not
     if ! grep -q "\[$repo]" "/etc/pacman.conf"; then
         # Ask to trust without signature
-        echo 'Do you want to trust mirrors without signature. This may fix some issues(Y/n) '
-        read -r choice
+        read -p "Do you want to trust mirrors without signature. This may fix some issues(Y/n) " choice
         if [ "$choice" = n ]; then
             printf "\n""%s""[$repo]""\nInclude = ""%s""/etc/pacman.d/$repo-mirrorlist" | sudo tee -a /etc/pacman.conf > /dev/null
         else
