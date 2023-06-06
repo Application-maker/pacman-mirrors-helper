@@ -1,5 +1,7 @@
 #!/bin/bash
 
+arch=$(uname -m)
+
 # Repo list from rate-mirrors
 repolist=(arch archarm archlinuxcn "artix(unsupported)" cachyos chaotic-aur endeavouros "manjaro(unsupported)" rebornos)
 
@@ -46,6 +48,14 @@ if [ "$2" = remove ]; then
     exit 1
 fi
 
+# Arm support
+if [[ $arch == arm* ]] || [[ $arch = aarch64 ]]; then
+    if [ "$repo" = arch ]; then
+        repo=archarm
+    fi
+fi
+
+
 # Rate mirrors
 printf "\n""%s""$LGREEN""Rating mirrors...""$NONE""\n"
 if [ ! -x "$(command -v rate-mirrors)" ]; then
@@ -70,7 +80,7 @@ fi
 grep -qe "^Server = http" "$MIRRORLIST_TEMP" 
 
 # Add mirrors to corresponding mirrorlist
-if [ "$repo" = arch ]; then
+if [ "$repo" = arch ] || [ "$repo" = archarm ]; then
     sudo install -m644 "$MIRRORLIST_TEMP" /etc/pacman.d/mirrorlist
 else
     sudo install -m644 "$MIRRORLIST_TEMP" "/etc/pacman.d/$repo-mirrorlist"
