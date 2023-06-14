@@ -3,7 +3,7 @@
 arch=$(uname -m)
 
 # Repo list from rate-mirrors
-repolist=(arch archarm archlinuxcn "artix(unsupported)" cachyos chaotic-aur endeavouros "manjaro(unsupported)" rebornos)
+repolist=(arch archarm archlinuxcn "artix" cachyos chaotic-aur endeavouros "manjaro" rebornos)
 
 # Make repo lowercase
 repo=$(echo "$1" | tr '[:upper:]' '[:lower:]')
