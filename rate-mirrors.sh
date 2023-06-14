@@ -5,6 +5,9 @@ arch=$(uname -m)
 # Repo list from rate-mirrors
 repolist=(arch archarm archlinuxcn "artix(unsupported)" cachyos chaotic-aur endeavouros "manjaro(unsupported)" rebornos)
 
+# Make repo lowercase
+repo=$(echo "$1" | tr '[:upper:]' '[:lower:]')
+second=$(echo "$2" | tr '[:upper:]' '[:lower:]')
 
 # Colors
 NONE='\e[0m'
@@ -21,21 +24,19 @@ fi
 # Temp file
 MIRRORLIST_TEMP="$(mktemp)"
 
-# $1, $2, $3... stands for arguments, for example: $1 = first argument $2 = second argument $3 = third argument and so on
-if [ "$1" = arch ] && [ "$2" = remove ] || [  "$1" = archarm ] && [ "$2" = remove ]; then
+# $1, $2, $3... stands for arguments, for example: $1 = first argument $second = second argument $3 = third argument and so on
+if [ "$1" = arch ] && [ "$second" = remove ] || [  "$1" = archarm ] && [ "$second" = remove ]; then
     printf "%s""$LRED""Can't delete arch repositories!""\n"
     exit 1
 fi
 
-if [ "$1" = artix ] && [ ! "$2" = remove ] || [ "$1" = manjaro ] && [ ! "$2" = remove ]; then
+if [ "$1" = artix ] && [ ! "$second" = remove ] || [ "$1" = manjaro ] && [ ! "$second" = remove ]; then
     printf "%s""$LRED""Artix and Manjaro repositories aren't supported yet!""\n"
     exit 1
 fi
 
-repo=$1
-
 # Remove repo
-if [ "$2" = remove ]; then
+if [ "$second" = remove ]; then
     # Check if repo is configured
     if grep -q "\[$repo]" "/etc/pacman.conf"; then
         # Remove repo
