@@ -14,7 +14,6 @@ done
 
 # Use lowercase arguments for processing
 repo=${args[0]}
-second=${args[1]}
 
 # Colors
 NONE='\e[0m'
