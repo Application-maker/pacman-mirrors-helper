@@ -5,9 +5,16 @@ arch=$(uname -m)
 # Repo list from rate-mirrors
 repolist=(arch archarm archlinuxcn "artix" cachyos chaotic-aur endeavouros "manjaro" rebornos)
 
-# Make repo lowercase
-repo=$(echo "$1" | tr '[:upper:]' '[:lower:]')
-second=$(echo "$2" | tr '[:upper:]' '[:lower:]')
+# Convert all arguments to lowercase
+args=("$@")
+for (( i=0; i<${#args[@]}; i++ ));
+do
+    args[$i]=${args[$i],,}
+done
+
+# Use lowercase arguments for processing
+repo=${args[0]}
+second=${args[1]}
 
 # Colors
 NONE='\e[0m'
@@ -16,27 +23,27 @@ LGREEN='\e[1;32m'
 LBLUE='\e[1;34m'
 
 # Help
-if [ "$1" = help ] || [ "$1" = --help ] || [[ -z "$1" ]] || [[ ! "${repolist[*]}" =~ ${1} ]]; then
-    printf "%s""$LRED""No $LGREEN$1$LRED repo found! Avaiable options are:""\n""%s""$LBLUE{${repolist[*]}} $LRED{remove}$NONE"
+if [[ "${args[0]}" == help ]] || [[ "${args[0]}" == --help ]] || [[ -z "${args[0]}" ]] || [[ ! "${repolist[*]}" =~ ${args[0]} ]]; then
+    printf "%s""$LRED""No $LGREEN${args[0]}$LRED repo found! Available options are:""\n""%s""$LBLUE{${repolist[*]}} $LRED{remove}$NONE"
     exit 1
 fi
 
 # Temp file
 MIRRORLIST_TEMP="$(mktemp)"
 
-# $1, $2, $3... stands for arguments, for example: $1 = first argument $second = second argument $3 = third argument and so on
-if [ "$1" = arch ] && [ "$second" = remove ] || [  "$1" = archarm ] && [ "$second" = remove ]; then
+# ${args[0]}, ${args[1]}, ${args[2]}... stands for arguments, for example: ${args[0]} = first argument ${args[1]} = second argument ${args[2]} = third argument and so on
+if [[ "${args[0]}" == arch ]] && [[ "${args[1]}" == remove ]] || [[  "${args[0]}" == archarm ]] && [[ "${args[1]}" == remove ]]; then
     printf "%s""$LRED""Can't delete arch repositories!""\n"
     exit 1
 fi
 
-if [ "$1" = artix ] && [ ! "$second" = remove ] || [ "$1" = manjaro ] && [ ! "$second" = remove ]; then
+if [[ "${args[0]}" == artix ]] && [[ ! "${args[1]}" == remove ]] || [[ "${args[0]}" == manjaro ]] && [[ ! "${args[1]}" == remove ]]; then
     printf "%s""$LRED""Artix and Manjaro repositories aren't supported yet!""\n"
     exit 1
 fi
 
 # Remove repo
-if [ "$second" = remove ]; then
+if [[ "${args[1]}" == remove ]]; then
     # Check if repo is configured
     if grep -q "\[$repo]" "/etc/pacman.conf"; then
         # Remove repo
@@ -51,7 +58,7 @@ fi
 
 # Arm support
 if [[ $arch == arm* ]] || [[ $arch = aarch64 ]]; then
-    if [ "$repo" = arch ]; then
+    if [[ "${args[0]}" == arch ]]; then
         repo=archarm
     fi
 fi
@@ -73,7 +80,7 @@ fi
 rate-mirrors --allow-root --save="$MIRRORLIST_TEMP" "$repo" > /dev/null
 
 # Adapt to Reborn-OS naming (instead of rebornos.db they have Reborn-OS.db)
-if [ "$repo" == rebornos ]; then
+if [ "${args[0]}" == rebornos ]; then
     repo=Reborn-OS
 fi
 
@@ -81,7 +88,7 @@ fi
 grep -qe "^Server = http" "$MIRRORLIST_TEMP" 
 
 # Add mirrors to corresponding mirrorlist
-if [ "$repo" = arch ] || [ "$repo" = archarm ]; then
+if [[ "${args[0]}" == arch ]] || [[ "${args[0]}" == archarm ]]; then
     sudo install -m644 "$MIRRORLIST_TEMP" /etc/pacman.d/mirrorlist
 else
     sudo install -m644 "$MIRRORLIST_TEMP" "/etc/pacman.d/$repo-mirrorlist"
