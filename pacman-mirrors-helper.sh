@@ -36,9 +36,10 @@ function update_mirrors {
     sudo pacman -Syyu
 }
 
+# CTRL+C
 function cleanup {
     echo "Cleaning up and exiting gracefully..."
-    if $MIRRORLIST_TEMP != ""; then
+    if [[ -n "$MIRRORLIST_TEMP" ]]; then
         rm "$MIRRORLIST_TEMP"
     fi
     exit
