@@ -25,9 +25,9 @@ LBLUE='\e[1;34m'
 # Check if repo is configured in /etc/pacman.conf
 function check_repo_configured {
     if grep -q "\[$1\]" "/etc/pacman.conf"; then
-        return 0    # Repo is configured, return success (0)
+        return 1    # Repo is configured, return true (1)
     else
-        return 1    # Repo is not configured, return failure (1)
+        return 0    # Repo is not configured, return false (0)
     fi
 }
 
@@ -39,7 +39,7 @@ function update_mirrors {
 
 # Cleanup function for handling SIGINT (CTRL+C)
 function cleanup {
-    echo "Cleaning up and exiting gracefully..."
+    printf "\n%s" "$LGREEN" "Cleaning up and exiting gracefully...""$NONE" "\n"
     if [[ -n "$MIRRORLIST_TEMP" ]]; then
         rm "$MIRRORLIST_TEMP"
     fi
