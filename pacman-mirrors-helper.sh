@@ -21,6 +21,21 @@ LRED='\e[1;31m'
 LGREEN='\e[1;32m'
 LBLUE='\e[1;34m'
 
+# Check if repo is configured in /etc/pacman.conf
+function check_repo_configured {
+    if grep -q "\[$1\]" "/etc/pacman.conf"; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# Update mirrors
+function update_mirrors {
+    printf "\n%s" "$LGREEN" "Updating mirrors..." "$NONE" "\n"
+    sudo pacman -Syyu
+}
+
 function cleanup {
     echo "Cleaning up and exiting gracefully..."
     if $MIRRORLIST_TEMP != ""; then
@@ -33,9 +48,13 @@ trap cleanup SIGINT
 
 # Help
 if [[ "${args[0]}" == help ]] || [[ "${args[0]}" == --help ]] || [[ -z "${args[0]}" ]] || [[ ! "${repolist[*]}" =~ ${args[0]} ]]; then
-    printf "%s""$LRED""No $LGREEN${args[0]}$LRED repo found! Available options are:""\n""%s""$LBLUE{${repolist[*]}} $LRED{remove}$NONE"
-    exit 1
+    print_available_options "$repo"
 fi
+
+function print_available_options {
+    printf "%s%s%s" "$LRED" "No $LGREEN$1$LRED repo found! Available options are:" "\n$LBLUE{${repolist[*]}} $LRED{remove}$NONE"
+    exit 1
+}
 
 # Temp file
 MIRRORLIST_TEMP="$(mktemp)"
@@ -102,7 +121,7 @@ if [[ "${args[0]}" == arch ]] || [[ "${args[0]}" == archarm ]]; then
 else
     sudo install -m644 "$MIRRORLIST_TEMP" "/etc/pacman.d/$repo-mirrorlist"
     # Check if repo is configured and add if not
-    if ! grep -q "\[$repo]" "/etc/pacman.conf"; then
+    if check_repo_configured "$repo"; then
         # Ask to trust without signature
         read -p "Do you want to trust mirrors without signature. This may fix some issues(Y/n) " choice
         if [ "$choice" = n ]; then
@@ -113,9 +132,7 @@ else
     fi
 fi
 
-# Update mirrors
-printf "\n""%s""$LGREEN""Updating mirrors...""$NONE""\n"
-sudo pacman -Syyu
+update_mirrors
 
 # Remove temp file
 rm "$MIRRORLIST_TEMP"
