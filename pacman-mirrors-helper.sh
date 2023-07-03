@@ -46,21 +46,34 @@ function cleanup {
     exit
 }
 
+# Help function for printing usage
+function print_usage {
+    printf "${LGREEN}Usage:${NONE} {${LBLUE}repo${NONE}} ${LGREEN}[remove]${NONE} - add or remove mirrorlist for a given repository
+
+If ${LGREEN}'remove'${NONE} is specified, the specified repo and its mirrorlist will be removed from ${LGREEN}pacman.conf${NONE} and ${LGREEN}/etc/pacman.d${NONE}.
+
+Available repos: ${LBLUE}${repolist[*]}${NONE}
+
+Examples:
+- ${LBLUE}arch${NONE}         # update Arch mirrors
+- ${LBLUE}cachyos${NONE}      # add/update CachyOS mirrors
+- ${LBLUE}endeavouros${NONE}   # add/update Endeavouros mirrors
+- ${LBLUE}chaotic-aur remove${NONE}      # remove Chaotic-AUR mirrors from ${LGREEN}pacman.conf${NONE} and ${LGREEN}/etc/pacman.d/chaotic-aur-mirrors${NONE}
+
+"
+
+    exit 0
+}
+
 # Trap SIGINT and call cleanup function
 trap cleanup SIGINT
-
-# Help function for printing available options
-function print_available_options {
-    printf "%s%s%s" "$LRED" "No $LGREEN$1$LRED repo found! Available options are:" "\n$LBLUE{${repolist[*]}} $LRED{remove}$NONE"
-    exit 1
-}
 
 # Create temporary file for storing mirror list
 MIRRORLIST_TEMP="$(mktemp)"
 
 # Help
 if [[ "${args[0]}" == help ]] || [[ "${args[0]}" == --help ]] || [[ -z "${args[0]}" ]] || [[ ! "${repolist[*]}" =~ ${args[0]} ]]; then
-    print_available_options "$repo"
+    print_usage "$repo"
 fi
 # Check if trying to remove Arch or Arch ARM repositories (these cannot be removed)
 if [[ "${args[0]}" == arch ]] && [[ "${args[1]}" == remove ]] || [[  "${args[0]}" == archarm ]] && [[ "${args[1]}" == remove ]]; then
