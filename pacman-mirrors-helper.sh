@@ -21,6 +21,16 @@ LRED='\e[1;31m'
 LGREEN='\e[1;32m'
 LBLUE='\e[1;34m'
 
+function cleanup {
+    echo "Cleaning up and exiting gracefully..."
+    if $MIRRORLIST_TEMP != ""; then
+        rm "$MIRRORLIST_TEMP"
+    fi
+    exit
+}
+
+trap cleanup SIGINT
+
 # Help
 if [[ "${args[0]}" == help ]] || [[ "${args[0]}" == --help ]] || [[ -z "${args[0]}" ]] || [[ ! "${repolist[*]}" =~ ${args[0]} ]]; then
     printf "%s""$LRED""No $LGREEN${args[0]}$LRED repo found! Available options are:""\n""%s""$LBLUE{${repolist[*]}} $LRED{remove}$NONE"
