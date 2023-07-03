@@ -58,6 +58,10 @@ function print_available_options {
 # Create temporary file for storing mirror list
 MIRRORLIST_TEMP="$(mktemp)"
 
+# Help
+if [[ "${args[0]}" == help ]] || [[ "${args[0]}" == --help ]] || [[ -z "${args[0]}" ]] || [[ ! "${repolist[*]}" =~ ${args[0]} ]]; then
+    print_available_options "$repo"
+fi
 # Check if trying to remove Arch or Arch ARM repositories (these cannot be removed)
 if [[ "${args[0]}" == arch ]] && [[ "${args[1]}" == remove ]] || [[  "${args[0]}" == archarm ]] && [[ "${args[1]}" == remove ]]; then
     printf "%s""$LRED""Can't delete Arch repositories!""\n"
@@ -73,7 +77,7 @@ fi
 # Remove a repo
 if [[ "${args[1]}" == remove ]]; then
     # Check if repo is configured
-    if grep -q "\[$repo]" "/etc/pacman.conf"; then
+    if check_repo_configured "$repo"; then
         # Remove repo section from pacman.conf
         sudo sed -i "/$repo/{N;d;}" /etc/pacman.conf
         # Remove corresponding mirror list file
