@@ -140,7 +140,7 @@ else
     # Add mirrors to repo-specific mirrorlist
     sudo install -m644 "$MIRRORLIST_TEMP" "/etc/pacman.d/$repo-mirrorlist"
     # Check if repo is configured, and if not, ask to trust mirrors without signature
-    if check_repo_configured "$repo"; then
+    if ! check_repo_configured "$repo"; then
         read -p "Do you want to trust mirrors without signature? This may fix some issues. (Y/n) " choice
         if [ "$choice" = n ]; then
             printf "\n""%s""[$repo]""\nInclude = ""%s""/etc/pacman.d/$repo-mirrorlist" | sudo tee -a /etc/pacman.conf > /dev/null
