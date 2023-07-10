@@ -33,13 +33,13 @@ function check_repo_configured {
 
 # Update mirrors
 function update_mirrors {
-    printf "\n%s" "$LGREEN" "Updating mirrors..." "$NONE" "\n"
+    printf "\n""$LGREEN""Updating mirrors...""$NONE""\n"
     sudo pacman -Syyu
 }
 
 # Cleanup function for handling SIGINT (CTRL+C)
 function cleanup {
-    printf "\n%s" "$LGREEN" "Cleaning up and exiting gracefully...""$NONE" "\n"
+    printf "\n""$LGREEN""Cleaning up and exiting gracefully...""$NONE""\n"
     if [[ -n "$MIRRORLIST_TEMP" ]]; then
         rm "$MIRRORLIST_TEMP"
     fi
@@ -77,13 +77,13 @@ if [[ "${args[0]}" == help ]] || [[ "${args[0]}" == --help ]] || [[ -z "${args[0
 fi
 # Check if trying to remove Arch or Arch ARM repositories (these cannot be removed)
 if [[ "${args[0]}" == arch ]] && [[ "${args[1]}" == remove ]] || [[  "${args[0]}" == archarm ]] && [[ "${args[1]}" == remove ]]; then
-    printf "%s""$LRED""Can't delete Arch repositories!""\n"
+    printf "$LRED""Can't delete Arch repositories!""\n"
     exit 1
 fi
 
 # Check if trying to use Artix or Manjaro repositories (these are not yet supported)
 if [[ "${args[0]}" == artix ]] && [[ ! "${args[1]}" == remove ]] || [[ "${args[0]}" == manjaro ]] && [[ ! "${args[1]}" == remove ]]; then
-    printf "%s""$LRED""Artix and Manjaro repositories aren't supported yet!""\n"
+    printf "$LRED""Artix and Manjaro repositories aren't supported yet!""\n"
     exit 1
 fi
 
@@ -98,7 +98,7 @@ if [[ "${args[1]}" == remove ]]; then
         exit
     fi
     # If not configured, show error message and exit
-    printf "%s""$LRED""There is no $repo repo configured!""\n""Check /etc/pacman.conf to see configured repos."
+    printf "$LRED""There is no $repo repo configured!""\n""Check /etc/pacman.conf to see configured repos."
     exit 1
 fi
 
@@ -110,17 +110,17 @@ if [[ $arch == arm* ]] || [[ $arch = aarch64 ]]; then
 fi
 
 # Rate mirrors using rate-mirrors tool and save to temporary file
-printf "\n""%s""$LGREEN""Rating mirrors...""$NONE""\n"
+printf "\n""$LGREEN""Rating mirrors...""$NONE""\n"
 if [ ! -x "$(command -v rate-mirrors)" ]; then
     # Check if rate-mirrors tool is installed, if not, prompt to install it
-    printf "%s""$LRED""rate-mirrors is not installed!""$NONE"
-    read -p "Do you want to install it? (Y/n) " choice
+    printf "$LRED""rate-mirrors is not installed!""$NONE""\n"
+    read -p "$LBLUE""Do you want to install it? (Y/n) " choice
     if [ "$choice" = n ]; then
         exit 1
     else
         sudo pacman -S rate-mirrors
-        printf "%s""$LGREEN""Done!""$NONE"
-        printf "\n""%s""$LGREEN""Rating mirrors...""$NONE""\n"
+        printf "$LGREEN""Done!""$NONE"
+        printf "\n""$LGREEN""Rating mirrors...""$NONE""\n"
     fi
 fi
 # Use --allow-root to support running as root (e.g. via sudo)
@@ -156,4 +156,4 @@ update_mirrors
 # Remove temporary file
 rm "$MIRRORLIST_TEMP"
 
-printf "%s""$LGREEN""Done!""$NONE"
+printf "$LGREEN""Done!""$NONE"
