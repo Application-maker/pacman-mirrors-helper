@@ -117,6 +117,7 @@ if [ ! -x "$(command -v rate-mirrors)" ]; then
     printf "$LBLUE""Do you want to install it? (Y/n) "
     read choice
     if [ "$choice" = n ]; then
+        printf "\n""$LRED""The program cannot work without rate-mirrors!""$NONE"
         exit 1
     else
         sudo pacman -S rate-mirrors
@@ -140,7 +141,8 @@ if [[ "${args[0]}" == arch ]] || [[ "${args[0]}" == archarm ]]; then
 else
     # Check if repo is configured, and if not, ask to trust mirrors without signature
     if check_repo_configured "$repo" == 0; then
-        read -p "Do you want to trust mirrors without signature? This may fix some issues. (Y/n) " choice
+        printf "$LBLUE""Do you want to trust mirrors without signature? This may fix some issues. (Y/n) " 
+        read choice
         if [ "$choice" = n ]; then
             printf "\n""%s""[$repo]""\nInclude = ""%s""/etc/pacman.d/$repo-mirrorlist" | sudo tee -a /etc/pacman.conf > /dev/null
         else
