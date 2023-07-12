@@ -138,8 +138,6 @@ if [[ "${args[0]}" == arch ]] || [[ "${args[0]}" == archarm ]]; then
     # Add mirrors to Arch mirrorlist
     sudo install -m644 "$MIRRORLIST_TEMP" /etc/pacman.d/mirrorlist
 else
-    # Add mirrors to repo-specific mirrorlist
-    sudo install -m644 "$MIRRORLIST_TEMP" "/etc/pacman.d/$repo-mirrorlist"
     # Check if repo is configured, and if not, ask to trust mirrors without signature
     if check_repo_configured "$repo" == 0; then
         read -p "Do you want to trust mirrors without signature? This may fix some issues. (Y/n) " choice
@@ -149,6 +147,8 @@ else
             printf "\n""%s""[$repo]""\nInclude = ""%s""/etc/pacman.d/$repo-mirrorlist""\nSigLevel = Optional TrustAll" | sudo tee -a /etc/pacman.conf > /dev/null
         fi
     fi
+    # Add mirrors to repo-specific mirrorlist
+    sudo install -m644 "$MIRRORLIST_TEMP" "/etc/pacman.d/$repo-mirrorlist"
 fi
 
 # Update mirrors after adding new ones
