@@ -24,7 +24,7 @@ LBLUE='\e[1;34m'
 
 # Check if repo is configured in /etc/pacman.conf
 function check_repo_configured {
-    if grep -qF "\[$1\]" "/etc/pacman.conf"; then
+    if grep -qF "[$1]" "/etc/pacman.conf"; then
         return 1    # Repo is configured, return true (1)
     else
         return 0    # Repo is not configured, return false (0)
