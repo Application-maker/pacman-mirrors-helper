@@ -90,9 +90,9 @@ fi
 # Remove a repo
 if [[ "${args[1]}" == remove ]]; then
     # Check if repo is configured
-    if check_repo_configured "$repo"; then
+    if ! check_repo_configured "$repo" == 0; then
         # Remove repo section from pacman.conf
-        sudo sed -i "/$repo/{N;d;}" /etc/pacman.conf
+        sudo sed -i "/\[$repo\]/,/^$/d" /etc/pacman.conf
         # Remove corresponding mirror list file
         sudo rm /etc/pacman.d/"$repo"-mirrorlist
         exit
