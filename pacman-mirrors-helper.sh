@@ -114,7 +114,8 @@ printf "\n""$LGREEN""Rating mirrors...""$NONE""\n"
 if [ ! -x "$(command -v rate-mirrors)" ]; then
     # Check if rate-mirrors tool is installed, if not, prompt to install it
     printf "$LRED""rate-mirrors is not installed!""$NONE""\n"
-    read -p "$LBLUE""Do you want to install it? (Y/n) " choice
+    printf "$LBLUE""Do you want to install it? (Y/n) "
+    read choice
     if [ "$choice" = n ]; then
         exit 1
     else
@@ -140,7 +141,7 @@ else
     # Add mirrors to repo-specific mirrorlist
     sudo install -m644 "$MIRRORLIST_TEMP" "/etc/pacman.d/$repo-mirrorlist"
     # Check if repo is configured, and if not, ask to trust mirrors without signature
-    if ! check_repo_configured "$repo"; then
+    if check_repo_configured "$repo" == 0; then
         read -p "Do you want to trust mirrors without signature? This may fix some issues. (Y/n) " choice
         if [ "$choice" = n ]; then
             printf "\n""%s""[$repo]""\nInclude = ""%s""/etc/pacman.d/$repo-mirrorlist" | sudo tee -a /etc/pacman.conf > /dev/null
